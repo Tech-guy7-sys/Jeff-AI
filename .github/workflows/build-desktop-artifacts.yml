@@ -42,6 +42,8 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install --no-audit --no-fund
+      - name: Compile TypeScript
+        run: npm run build
       - name: Build and package Jeff AI
         run: npx electron-builder --config electron-builder.yml --${{ matrix.platform }} --${{ matrix.arch }}
       - name: Upload package artifacts (not a release)

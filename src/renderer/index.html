@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Jeff AI</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">JT</span><span><strong>Jeff AI</strong><small>JT INTELLIGENCE</small></span></div>
+      <div class="sidebar-label">WORKSPACE</div>
+      <button class="side-item active" type="button"><span>✦</span> New conversation</button>
+      <div class="sidebar-note"><span class="status-dot"></span><div><strong>Local AI workspace</strong><small>Your provider runs on this device or configured endpoint.</small></div></div>
+      <div class="sidebar-footer">A JT Digital World app</div>
+    </aside>
+    <main class="main">
+      <header class="topbar"><div><span class="eyebrow">JT AI WORKSPACE</span><h1>What are we building today?</h1></div><div class="avatar">JT</div></header>
+      <section id="messages" class="messages" aria-live="polite">
+        <div class="welcome">
+          <div class="orb">✦</div>
+          <h2>Ideas in. Possibilities out.</h2>
+          <p>Ask Jeff AI to help you think, plan, write, or solve a problem.</p>
+          <div class="suggestions">
+            <button type="button" data-prompt="Help me plan a useful desktop app.">Plan an app <span>↗</span></button>
+            <button type="button" data-prompt="Explain a difficult topic step by step.">Learn something <span>↗</span></button>
+            <button type="button" data-prompt="Help me debug a programming problem.">Debug code <span>↗</span></button>
+          </div>
+        </div>
+      </section>
+      <form id="chat-form" class="composer">
+        <textarea id="message-input" rows="1" maxlength="12000" placeholder="Message Jeff AI…" aria-label="Message Jeff AI"></textarea>
+        <div class="composer-bottom"><span>Local provider · Verify important results</span><button id="send-button" type="submit" aria-label="Send message">↑</button></div>
+      </form>
+      <p class="disclaimer">Jeff AI can make mistakes. Review important answers before acting on them.</p>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

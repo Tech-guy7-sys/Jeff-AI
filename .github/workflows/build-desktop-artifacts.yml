@@ -45,7 +45,7 @@ jobs:
       - name: Compile TypeScript
         run: npm run build
       - name: Build and package Jeff AI
-        run: npx electron-builder --config electron-builder.yml --${{ matrix.platform }} --${{ matrix.arch }}
+        run: npx electron-builder --config electron-builder.yml --${{ matrix.platform }} --${{ matrix.arch }} --publish=never
       - name: Upload package artifacts (not a release)
         uses: actions/upload-artifact@v4
         with:

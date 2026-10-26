@@ -1,0 +1,43 @@
+{
+  "product": "Jeff AI",
+  "category": "AI assistant",
+  "schemaVersion": 1,
+  "templates": [
+    {
+      "id": "daily-planning",
+      "name": "Daily Planning",
+      "prompt": "Help me turn my priorities into a realistic plan. Ask about deadlines, group related work, and show assumptions.",
+      "tools": [
+        "notes",
+        "calendar-if-connected"
+      ],
+      "approvalRequired": [
+        "create-calendar-event"
+      ]
+    },
+    {
+      "id": "document-review",
+      "name": "Document Review",
+      "prompt": "Review the supplied document for structure, clarity, factual claims and unanswered questions. Distinguish direct evidence from inference.",
+      "tools": [
+        "user-provided-files"
+      ],
+      "approvalRequired": [
+        "external-sharing"
+      ]
+    },
+    {
+      "id": "debugging",
+      "name": "Debugging Partner",
+      "prompt": "Reproduce the issue from the supplied error, inspect relevant code, suggest the smallest fix, and state tests run and remaining uncertainty.",
+      "tools": [
+        "repository-read",
+        "test-runner-if-enabled"
+      ],
+      "approvalRequired": [
+        "file-write",
+        "shell-command"
+      ]
+    }
+  ]
+}

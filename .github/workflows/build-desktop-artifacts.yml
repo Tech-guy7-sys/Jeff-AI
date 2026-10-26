@@ -33,7 +33,7 @@ jobs:
             runner: ubuntu-latest
           - platform: linux
             arch: arm64
-            runner: ubuntu-24.04-arm
+            runner: ubuntu-latest
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v4

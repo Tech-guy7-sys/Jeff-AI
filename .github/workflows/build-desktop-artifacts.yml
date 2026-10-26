@@ -1,0 +1,53 @@
+name: Build Jeff AI Desktop Artifacts
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    name: Package ${{ matrix.platform }} / ${{ matrix.arch }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: win
+            arch: x64
+            runner: windows-latest
+          - platform: win
+            arch: ia32
+            runner: windows-latest
+          - platform: mac
+            arch: x64
+            runner: macos-latest
+          - platform: mac
+            arch: arm64
+            runner: macos-latest
+          - platform: linux
+            arch: x64
+            runner: ubuntu-latest
+          - platform: linux
+            arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Build and package Jeff AI
+        run: npx electron-builder --config electron-builder.yml --${{ matrix.platform }} --${{ matrix.arch }}
+      - name: Upload package artifacts (not a release)
+        uses: actions/upload-artifact@v4
+        with:
+          name: jeff-ai-${{ matrix.platform }}-${{ matrix.arch }}
+          path: release/*
+          if-no-files-found: error
+          retention-days: 30

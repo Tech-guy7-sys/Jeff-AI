@@ -22,7 +22,7 @@ export class OpenRouterProvider {
     const payload = await response.json() as { data?: Array<{ id: string; name?: string; context_length?: number; pricing?: { prompt?: string; completion?: string } }> };
     return (payload.data || []).filter(m => Number(m.pricing?.prompt) === 0 && Number(m.pricing?.completion) === 0).map(m => ({ id: m.id, name: m.name || m.id, context_length: m.context_length })).sort((a,b)=>a.name.localeCompare(b.name));
   }
-  async chat(message: string, options: { model?: string } = {}): Promise<string> {
+  async chat(message: string, options: { model?: string; imageDataUrl?: string } = {}): Promise<string> {
     const key = this.getApiKey();
     if (!key) throw new Error("Add your OpenRouter API key in Jeff AI Settings before chatting.");
     const plan = this.getPlan();
@@ -34,7 +34,7 @@ export class OpenRouterProvider {
         response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
           method: "POST",
           headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json", "HTTP-Referer": "https://jtdigitalworld.com", "X-Title": "Jeff AI · J Tech Digital World" },
-          body: JSON.stringify({ model, messages: [{ role: "user", content: message }], stream: false }),
+          body: JSON.stringify({ model, messages: [{ role: "user", content: options.imageDataUrl ? [{ type: "text", text: message }, { type: "image_url", image_url: { url: options.imageDataUrl } }] : message }], stream: false }),
           signal: AbortSignal.timeout(120000)
         });
       } catch { lastError = "Jeff AI could not reach OpenRouter. Check your internet connection and try again."; continue; }

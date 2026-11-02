@@ -8,7 +8,7 @@
 
 ## Implemented in Jeff AI desktop
 - OpenRouter chat-completions adapter.
-- Dynamic free-model catalogue discovery using OpenRouter's models endpoint; filters for zero input and output token pricing.
+- Dynamic free-model catalogue discovery using OpenRouter's models endpoint; filters explicit :free model IDs (plus openrouter/free) and zero input/output token pricing.
 - JT Core profile routing and ordered fallback.
 - Main-process IPC for chat, model catalogue, and settings.
 - API key encryption through Electron safeStorage in the app's user-data directory.
@@ -16,7 +16,7 @@
 
 ## Model profiles
 - Core v1: nvidia/nemotron-3-ultra-550b-a55b:free → fallback google/gemma-4-26b-a4b-it:free.
-- Core v2: Core v1 plus nvidia/nemotron-3.5-super-vl:free for multimodal use; image attachment support in the desktop chat UI is still pending.
+- Core v2: Core v1 plus nvidia/nemotron-3.5-super-vl:free for multimodal use; PNG, JPEG, and WebP image attachment is implemented in the desktop chat UI; the Student/Pro/Enterprise profile routes image prompts through Nemotron 3.5 Super VL.
 - Pro (proposed): Core v2 plus openrouter/free.
 - Enterprise (proposed): Core v1 + Core v2 + openrouter/free + cohere/north-mini-code:free.
 
@@ -39,7 +39,6 @@ To enable the hosted route, add OPENROUTER_API_KEY as a secret in the Cloudflare
 - Shared multi-app JT AI Core SDK package consumed by every desktop app.
 - Student/Pro/Enterprise billing, signed plan entitlements, and account-based enforcement.
 - Enterprise multi-user account with an enforced 200-worker limit, admin roles, and audit console.
-- Image attachment UX in Jeff AI desktop.
 - Usage metering, per-user quotas, queueing, and a reliable paid fallback for enterprise workloads.
 - Automated provider contract tests and end-to-end UI tests.
 

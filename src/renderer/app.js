@@ -1,6 +1,8 @@
 const bridge = window.jeffAI;
 const form = document.querySelector("#chat-form"), input = document.querySelector("#message-input"), messages = document.querySelector("#messages"), sendButton = document.querySelector("#send-button");
 const modal = document.querySelector("#settingsModal"), planSelect = document.querySelector("#planSelect"), apiKeyInput = document.querySelector("#apiKeyInput"), modelSelect = document.querySelector("#modelSelect"), settingsStatus = document.querySelector("#settingsStatus");
+const imageInput = document.querySelector("#image-input");
+let selectedImageDataUrl = "";
 function addMessage(role, text) {
   const item = document.createElement("article"); item.className = `message ${role}`;
   const label = document.createElement("div"); label.className = "message-label"; label.textContent = role === "user" ? "YOU" : "JEFF AI";
@@ -37,9 +39,21 @@ document.querySelector("#saveSettings").addEventListener("click",async()=>{
     showStatus("Settings saved securely on this device.");
   }catch(e){showStatus(e instanceof Error?e.message:"Could not save settings.",true);}finally{button.disabled=false;}
 });
-form.addEventListener("submit",async e=>{e.preventDefault();const message=input.value.trim();if(!message||sendButton.disabled)return;
-  const welcome=messages.querySelector(".welcome");if(welcome)welcome.remove();addMessage("user",message);input.value="";input.style.height="auto";sendButton.disabled=true;const pending=addMessage("assistant","Thinking…");
-  try{pending.querySelector("p").textContent=await bridge.sendMessage(message);}catch(error){pending.querySelector("p").textContent=error instanceof Error?error.message:"Something went wrong. Please try again.";}finally{sendButton.disabled=false;input.focus();}
+imageInput.addEventListener("change", async () => {
+  const file = imageInput.files?.[0];
+  if (!file) { selectedImageDataUrl = ""; return; }
+  if (!["image/png", "image/jpeg", "image/webp"].includes(file.type) || file.size > 5 * 1024 * 1024) {
+    document.querySelector("#image-status").textContent = "Choose a PNG, JPEG, or WebP image under 5 MB.";
+    imageInput.value = ""; selectedImageDataUrl = ""; return;
+  }
+  selectedImageDataUrl = await new Promise((resolve, reject) => {
+    const reader = new FileReader(); reader.onload = () => resolve(String(reader.result || "")); reader.onerror = () => reject(new Error("Could not read this image.")); reader.readAsDataURL(file);
+  }).catch(error => { document.querySelector("#image-status").textContent = error.message; return ""; });
+  document.querySelector("#image-status").textContent = selectedImageDataUrl ? `Image ready: ${file.name}` : "No image attached.";
+});
+form.addEventListener("submit",async e=>{e.preventDefault();const message=input.value.trim();if((!message&&!selectedImageDataUrl)||sendButton.disabled)return;
+  const welcome=messages.querySelector(".welcome");if(welcome)welcome.remove();addMessage("user",message+(selectedImageDataUrl?" [image attached]":""));input.value="";input.style.height="auto";sendButton.disabled=true;const pending=addMessage("assistant","Thinking…");
+  try{pending.querySelector("p").textContent=await bridge.sendMessage(message||"Please analyze the attached image.",selectedImageDataUrl||undefined);}catch(error){pending.querySelector("p").textContent=error instanceof Error?error.message:"Something went wrong. Please try again.";}finally{selectedImageDataUrl="";imageInput.value="";document.querySelector("#image-status").textContent="Images use JT AI Core vision models on eligible plans.";sendButton.disabled=false;input.focus();}
 });
 input.addEventListener("input",()=>{input.style.height="auto";input.style.height=`${Math.min(input.scrollHeight,180)}px`;});
 refreshSettings().catch(e=>showStatus(e.message,true));

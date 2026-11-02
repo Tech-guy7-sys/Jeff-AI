@@ -11,7 +11,7 @@ export function modelsForPlan(plan: JTPlan, hasImage = false, coding = false): s
   if (plan === "free") return v1;
   if (plan === "student") return hasImage ? [JT_CORE_MODELS.vision, ...v1] : v1;
   if (plan === "pro") return hasImage ? [JT_CORE_MODELS.vision, JT_CORE_MODELS.router, ...v1] : [JT_CORE_MODELS.router, ...v1];
-  return coding ? [JT_CORE_MODELS.code, JT_CORE_MODELS.router, ...v1] : hasImage ? [JT_CORE_MODELS.vision, JT_CORE_MODELS.router, ...v1] : [JT_CORE_MODELS.router, ...v1];
+  return coding ? [JT_CORE_MODELS.code, JT_CORE_MODELS.vision, JT_CORE_MODELS.router, ...v1] : hasImage ? [JT_CORE_MODELS.vision, JT_CORE_MODELS.router, ...v1] : [JT_CORE_MODELS.router, JT_CORE_MODELS.vision, ...v1];
 }
 export class OpenRouterProvider {
   constructor(private readonly getApiKey: () => string, private readonly getPlan: () => JTPlan) {}

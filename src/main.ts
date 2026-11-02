@@ -33,9 +33,11 @@ ipcMain.handle("jeff-ai:settings:save", async (_event, input: unknown) => {
 });
 ipcMain.handle("jeff-ai:models:list-free", async () => provider.listFreeModels());
 ipcMain.handle("jeff-ai:chat", async (_event, input: unknown) => {
-  if (typeof input !== "string" || !input.trim()) throw new Error("Enter a message first.");
-  if (input.length > 12000) throw new Error("That message is too long. Please shorten it and try again.");
-  return provider.chat(input.trim(), { model: settings.selectedModel || undefined });
+  const payload = typeof input === "string" ? { message: input } : input as { message?: unknown; imageDataUrl?: unknown };
+  if (!payload || typeof payload.message !== "string" || !payload.message.trim()) throw new Error("Enter a message first.");
+  if (payload.message.length > 12000) throw new Error("That message is too long. Please shorten it and try again.");
+  if (payload.imageDataUrl !== undefined && (typeof payload.imageDataUrl !== "string" || !/^data:image\\/(png|jpeg|webp);base64,/.test(payload.imageDataUrl) || payload.imageDataUrl.length > 7_000_000)) throw new Error("Choose a PNG, JPEG, or WebP image under 5 MB.");
+  return provider.chat(payload.message.trim(), { model: settings.selectedModel || undefined, imageDataUrl: payload.imageDataUrl as string | undefined });
 });
 app.whenReady().then(async () => { await loadSettings(); createWindow(); app.on("activate", () => { if (BrowserWindow.getAllWindows().length === 0) createWindow(); }); });
 app.on("window-all-closed", () => { if (process.platform !== "darwin") app.quit(); });

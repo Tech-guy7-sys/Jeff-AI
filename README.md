@@ -4,7 +4,7 @@ Jeff AI is the user-facing AI workspace in the JT ecosystem. It is an Electron +
 
 ## AI provider
 
-Jeff AI uses OpenRouter through the JT AI Core provider abstraction. It can discover the current OpenRouter catalogue of free models and filter it by zero input/output token price. The catalogue is dynamic; model availability, provider capacity, and free limits can change.
+Jeff AI supports local Ollama and OpenRouter through the JT AI Core provider abstraction. Choose the provider in Settings, test the connection, and discover its installed/available models. Ollama uses the local OpenAI-compatible endpoint at `http://127.0.0.1:11434` by default; prompts stay on the local machine when Ollama is selected. OpenRouter sends prompts to its cloud API. It can discover the current OpenRouter catalogue of free models and filter it by zero input/output token price. The catalogue is dynamic; model availability, provider capacity, and free limits can change.
 
 ### JT AI Core tiers (routing profiles)
 

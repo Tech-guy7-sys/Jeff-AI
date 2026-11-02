@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain, safeStorage } from "electron";
 import path from "node:path";
 import fs from "node:fs/promises";
 import { OpenRouterProvider, JTPlan } from "./core/ai-provider";
+import { assertCapability } from "./core/app-permissions";
 type Settings = { encryptedApiKey?: string; plan: JTPlan; selectedModel?: string };
 const settingsPath = () => path.join(app.getPath("userData"), "jt-ai-settings.json");
 let settings: Settings = { plan: "free" };

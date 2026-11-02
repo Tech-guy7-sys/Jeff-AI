@@ -3,9 +3,10 @@ declare global {
   interface Window {
     jeffAI: {
       sendMessage(message: string, imageDataUrl?: string): Promise<string>;
-      getSettings(): Promise<{ plan: string; selectedModel: string; hasApiKey: boolean; secureStorageAvailable: boolean }>;
-      saveSettings(settings: { apiKey?: string; plan?: string; selectedModel?: string }): Promise<{ plan: string; selectedModel: string; hasApiKey: boolean; secureStorageAvailable: boolean }>;
-      listFreeModels(): Promise<Array<{ id: string; name: string; context_length?: number }>>;
+      getSettings(): Promise<{ plan: string; selectedModel: string; provider: "ollama" | "openrouter"; ollamaBaseUrl: string; hasApiKey: boolean; secureStorageAvailable: boolean }>;
+      saveSettings(settings: { apiKey?: string; plan?: string; selectedModel?: string; provider?: string; ollamaBaseUrl?: string }): Promise<{ plan: string; selectedModel: string; provider: "ollama" | "openrouter"; ollamaBaseUrl: string; hasApiKey: boolean; secureStorageAvailable: boolean }>;
+      listModels(): Promise<Array<{ id: string; name: string; context_length?: number }>>;
+      testProvider(): Promise<{ ok: boolean; provider: string; models: Array<{ id: string; name: string }> }>;
     };
   }
 }

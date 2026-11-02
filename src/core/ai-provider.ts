@@ -20,7 +20,7 @@ export class OpenRouterProvider {
     const response = await fetch("https://openrouter.ai/api/v1/models", { headers: key ? { Authorization: `Bearer ${key}` } : {}, signal: AbortSignal.timeout(20000) });
     if (!response.ok) throw new Error(`OpenRouter model catalogue returned HTTP ${response.status}.`);
     const payload = await response.json() as { data?: Array<{ id: string; name?: string; context_length?: number; pricing?: { prompt?: string; completion?: string } }> };
-    return (payload.data || []).filter(m => Number(m.pricing?.prompt) === 0 && Number(m.pricing?.completion) === 0).map(m => ({ id: m.id, name: m.name || m.id, context_length: m.context_length })).sort((a,b)=>a.name.localeCompare(b.name));
+    return (payload.data || []).filter(m => (m.id.endsWith(":free") || m.id === "openrouter/free") && Number(m.pricing?.prompt) === 0 && Number(m.pricing?.completion) === 0).map(m => ({ id: m.id, name: m.name || m.id, context_length: m.context_length })).sort((a,b)=>a.name.localeCompare(b.name));
   }
   async chat(message: string, options: { model?: string; imageDataUrl?: string } = {}): Promise<string> {
     const key = this.getApiKey();

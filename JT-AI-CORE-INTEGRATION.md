@@ -27,6 +27,12 @@ The Cloudflare Pages Function accepts the jt-core provider and routes through Op
 
 To enable the hosted route, add OPENROUTER_API_KEY as a secret in the Cloudflare Pages project's environment variables and redeploy. The existing GitHub Actions secrets for Cloudflare deployment are separate credentials and must not be reused as the OpenRouter key.
 
+## Shared app capability contract
+
+`src/core/app-permissions.ts` now defines the canonical JT app IDs, capability vocabulary, per-app capability allowlists, and approval-required operations. `src/main.ts` enforces the Jeff AI `ai.chat` and `ai.vision` scopes in the trusted Electron main process before provider calls. The policy intentionally denies capabilities not listed for an app and requires an explicit approval signal for file writes, terminal execution, desktop control, cloud sync, and install/update operations.
+
+This is the first shared policy contract, not yet a separately versioned npm package. Each app still needs a native/main-process adapter and must not treat a renderer checkbox as authorization. The other JT apps are not yet consumers of this module.
+
 ## Security and permissions
 - Provider requests execute in the Electron main process or Cloudflare Pages Function, not the renderer.
 - The Electron API key is encrypted with OS-backed safeStorage; if secure storage is unavailable, saving is rejected.

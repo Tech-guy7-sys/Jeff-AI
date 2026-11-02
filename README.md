@@ -18,9 +18,16 @@ An OpenRouter account and API key are required. Each installation stores its own
 
 The API key is encrypted with Electron safeStorage in the app's user-data directory. It is not stored in renderer local storage, embedded in the installer, or committed to source control. If the operating system cannot provide secure storage, the app refuses to save the key.
 
-## JT AI Core tiers (routing profiles)
+## J Tech AI Core model tiers
 
-The current plan selector is a local development profile switch, not subscription billing or verified account entitlement enforcement. Free-model availability and limits are controlled by OpenRouter. The Free profile is the default.
+Automatic routing follows the JT model profiles rather than sending every Free user to the generic router:
+
+- **Free — J Tech AI Core v1:** `nvidia/nemotron-3-ultra-550b-a55b:free` first, then `google/gemma-4-26b-a4b-it:free` as fallback.
+- **Student — J Tech AI Core v2:** v1 for text; `nvidia/nemotron-3.5-super-vl:free` is tried first for image requests, then v1 fallbacks.
+- **Pro:** OpenRouter Free Router, with the curated free models as fallback; vision-capable requests try the v2 vision model first.
+- **Enterprise:** adds `cohere/north-mini-code:free` for coding tasks, the v2 vision model for image requests, and OpenRouter Free Router with v1 fallbacks.
+
+The router tries candidates in order and returns the first successful response; it does not merge multiple model outputs. A manually selected model overrides automatic routing. The tier selector is currently a local development profile, not subscription billing or server-enforced entitlement. The proposed Enterprise 200-worker ceiling is not implemented as a concurrency limit.
 
 ## Develop
 

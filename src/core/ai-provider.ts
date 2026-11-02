@@ -11,7 +11,11 @@ export function modelsForPlan(plan: JTPlan, hasImage = false, coding = false): s
   if (plan === "free") return v1;
   if (plan === "student") return hasImage ? [JT_CORE_MODELS.vision, ...v1] : v1;
   if (plan === "pro") return hasImage ? [JT_CORE_MODELS.vision, JT_CORE_MODELS.router, ...v1] : [JT_CORE_MODELS.router, ...v1];
-  return coding ? [JT_CORE_MODELS.code, JT_CORE_MODELS.vision, JT_CORE_MODELS.router, ...v1] : hasImage ? [JT_CORE_MODELS.vision, JT_CORE_MODELS.router, ...v1] : [JT_CORE_MODELS.router, JT_CORE_MODELS.vision, ...v1];
+  return coding
+    ? [JT_CORE_MODELS.code, ...(hasImage ? [JT_CORE_MODELS.vision] : []), JT_CORE_MODELS.router, ...v1]
+    : hasImage
+      ? [JT_CORE_MODELS.vision, JT_CORE_MODELS.router, ...v1]
+      : [JT_CORE_MODELS.router, ...v1];
 }
 export class OpenRouterProvider {
   constructor(private readonly getApiKey: () => string, private readonly getPlan: () => JTPlan) {}
@@ -27,7 +31,7 @@ export class OpenRouterProvider {
     if (!key) throw new Error("Add your OpenRouter API key in Jeff AI Settings before chatting.");
     const plan = this.getPlan();
     if (options.imageDataUrl && plan === "free" && !options.model) throw new Error("Image understanding is available in the Student plan and above. You can still choose a vision-capable free model manually in Settings.");
-    const candidates = options.model ? [options.model] : [JT_CORE_MODELS.router, ...modelsForPlan(plan, Boolean(options.imageDataUrl), /\b(code|program|debug|typescript|javascript|python|build an app)\b/i.test(message))];
+    const candidates = options.model ? [options.model] : modelsForPlan(plan, Boolean(options.imageDataUrl), /\b(code|program|debug|typescript|javascript|python|build an app)\b/i.test(message));
     let lastError = "No available free model answered the request.";
     for (const model of [...new Set(candidates)]) {
       let response: Response;

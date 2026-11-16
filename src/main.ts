@@ -3,6 +3,7 @@ import path from "node:path";
 import fs from "node:fs/promises";
 import { OpenRouterProvider, JTPlan } from "./core/ai-provider";
 import { assertCapability } from "./core/app-permissions";
+const APP_ICON = path.join(__dirname, "../build/icons/jeff-ai.png");
 
 type Settings = { encryptedApiKey?: string; plan: JTPlan; selectedModel?: string };
 const defaults: Settings = { plan: "free" };
@@ -31,7 +32,7 @@ function getApiKey(): string {
 const openRouter = new OpenRouterProvider(getApiKey, () => settings.plan);
 
 function createWindow(): void {
-  const window = new BrowserWindow({ width: 1120, height: 760, minWidth: 680, minHeight: 520, title: "Jeff AI", backgroundColor: "#090b14", webPreferences: { preload: path.join(__dirname, "preload.js"), contextIsolation: true, nodeIntegration: false, sandbox: true } });
+  const window = new BrowserWindow({ width: 1120, height: 760, minWidth: 680, minHeight: 520, title: "Jeff AI", icon: APP_ICON, backgroundColor: "#090b14", webPreferences: { preload: path.join(__dirname, "preload.js"), contextIsolation: true, nodeIntegration: false, sandbox: true } });
   void window.loadFile(path.join(__dirname, "../src/renderer/index.html"));
 }
 function publicSettings() {
@@ -76,5 +77,5 @@ ipcMain.handle("jeff-ai:chat", async (_event, input: unknown) => {
   if (payload.imageDataUrl !== undefined) assertCapability("jeff-ai", "ai.vision");
   return openRouter.chat(payload.message.trim(), { model: settings.selectedModel || undefined, imageDataUrl: payload.imageDataUrl as string | undefined });
 });
-app.whenReady().then(async () => { await loadSettings(); createWindow(); app.on("activate", () => { if (BrowserWindow.getAllWindows().length === 0) createWindow(); }); });
+app.whenReady().then(async () => { if (process.platform === "win32") app.setAppUserModelId("world.jtech.jeffai"); await loadSettings(); createWindow(); app.on("activate", () => { if (BrowserWindow.getAllWindows().length === 0) createWindow(); }); });
 app.on("window-all-closed", () => { if (process.platform !== "darwin") app.quit(); });

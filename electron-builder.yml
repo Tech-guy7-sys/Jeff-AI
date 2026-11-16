@@ -1,14 +1,18 @@
 appId: world.jtech.jeffai
 productName: Jeff AI
 directories:
+  buildResources: build
   output: release
 files:
   - dist/**
   - src/renderer/**
   - package.json
+  - build/icons/jeff-ai.png
 asar: true
 artifactName: ${productName}-${version}-${os}-${arch}.${ext}
 win:
+  icon: build/icons/jeff-ai.ico
+  requestedExecutionLevel: asInvoker
   target:
     - target: nsis
       arch:
@@ -19,9 +23,15 @@ win:
         - x64
         - ia32
 nsis:
+  installerIcon: build/icons/jeff-ai.ico
+  uninstallerIcon: build/icons/jeff-ai.ico
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Jeff AI
   oneClick: false
   allowToChangeInstallationDirectory: true
 mac:
+  icon: build/icons/jeff-ai.icns
   category: public.app-category.productivity
   target:
     - target: dmg
@@ -33,6 +43,7 @@ mac:
         - x64
         - arm64
 linux:
+  icon: build/icons/jeff-ai.png
   category: Office
   target:
     - target: AppImage

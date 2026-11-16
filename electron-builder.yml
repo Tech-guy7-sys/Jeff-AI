@@ -45,10 +45,6 @@ mac:
 linux:
   icon: build/icons/jeff-ai.png
   category: Office
-  desktop:
-    Name: Jeff AI
-    Comment: Jeff AI by J Tech Digital World
-    Categories: Office;Utility;
   target:
     - target: AppImage
       arch:

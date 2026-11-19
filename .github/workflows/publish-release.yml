@@ -39,13 +39,13 @@ jobs:
             runner: macos-15-intel
           - platform: mac
             arch: arm64
-            runner: macos-14
+            runner: macos-15
           - platform: linux
             arch: x64
             runner: ubuntu-latest
           - platform: linux
             arch: arm64
-            runner: ubuntu-latest
+            runner: ubuntu-24.04-arm
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v4
